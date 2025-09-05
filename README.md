@@ -24,10 +24,8 @@ O objetivo é fornecer uma base sólida para aplicações web escaláveis, segur
 - [TailwindCSS](https://tailwindcss.com/) 🎨 – Estilização com utilitários CSS  
 - [React Router DOM](https://reactrouter.com/) 🛣️ – Gerenciamento de rotas  
 - [Axios](https://axios-http.com/) 🔄 – Requisições HTTP simplificadas  
-<<<<<<< HEAD
-- [crypto-js](https://www.npmjs.com/package/crypto-js) 🔐 – Criptografia de dados no frontend  
-=======
->>>>>>> 569b2e8040c270499e24d5f8a6193ae40e148ba1
+- [crypto-js](https://www.npmjs.com/package/crypto-js) 🔐 – Criptografia de dados no frontend
+- 
 - **LocalStorage** 💾 – Armazenamento local do navegador  
 
 ---
