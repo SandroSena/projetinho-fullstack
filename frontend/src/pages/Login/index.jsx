@@ -2,6 +2,8 @@ import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import Header from "../../components/Header";
+import CryptoJS from "crypto-js";
+import CRYPTO_CONFIG from "../../config/crypto.js";
 
 const Login = () => {
   const emailRef = useRef();
@@ -12,18 +14,30 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data: token } = await api.post("/login", {
+      // Criptografar a senha antes de enviar
+      // Adicionamos o salt para aumentar a segurança
+      const saltedPassword = passwordRef.current.value + CRYPTO_CONFIG.SECRET_KEY;
+      const hashedPassword = CryptoJS.SHA256(saltedPassword).toString();
+      
+      const response = await api.post("/login", {
         email: emailRef.current.value,
-        password: passwordRef.current.value,
+        password: hashedPassword,
       });
-
+      
+      const token = response.data;
       localStorage.setItem("token", token);
 
       navigate("/listar-usuarios");
 
       // eslint-disable-next-line no-unused-vars
     } catch (err) {
-      alert("Senha ou email incorretos!");
+      // Verifica se é o caso específico de conta criada antes da atualização
+      if (err.response && err.response.data && err.response.data.needsReregister) {
+        alert(err.response.data.message || "Sua conta foi criada antes da atualização do sistema. Por favor, crie uma nova conta com o mesmo email.");
+        navigate("/"); // Redireciona para a página de cadastro
+      } else {
+        alert("Senha ou email incorretos!");
+      }
     }
   };
 

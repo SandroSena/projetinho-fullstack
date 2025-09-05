@@ -2,6 +2,8 @@ import { useRef } from "react";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
 import Header from "../../components/Header";
+import CryptoJS from "crypto-js";
+import CRYPTO_CONFIG from "../../config/crypto.js";
 
 const Cadastro = () => {
   const nameRef = useRef();
@@ -11,11 +13,17 @@ const Cadastro = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Criptografar a senha antes de enviar
+      // Adicionamos o salt para aumentar a segurança
+      const saltedPassword = passwordRef.current.value + CRYPTO_CONFIG.SECRET_KEY;
+      const hashedPassword = CryptoJS.SHA256(saltedPassword).toString();
+      
       await api.post("/register", {
         name: nameRef.current.value,
         email: emailRef.current.value,
-        password: passwordRef.current.value,
+        password: hashedPassword,
       });
+      
       alert("Usuário cadastrado com sucesso!");
       // eslint-disable-next-line no-unused-vars
     } catch (err) {
